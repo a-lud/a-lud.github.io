@@ -1,4 +1,21 @@
-# Using RClone on Phoenix: A CLI approach to data transfer
+---
+title: Using RClone on Phoenix for transferring data
+layout: post
+post-image: "https://forum.rclone.org/uploads/default/original/2X/0/0f430bb0f2f7a9ed020a9e93c89f4d332adcac4b.gif"
+description: A simple guide to setting up RClone on Phoenix using Conda
+tags:
+  - Phoenix
+  - informative
+  - guide
+---
+
+Often we want to transfer data from a cluster to a cloud storage location so it can be shared
+with someone. Here, I walk through how to set up RClone on Phoenix to enable simple data transfer
+from Phoenix to Box.
+
+---
+
+# Introduction
 
 A tricky aspect of working on a compute cluster is sharing the data that we generate. Often we have
 to download the data manually, then upload it to a cloud storage location which is accessible to all

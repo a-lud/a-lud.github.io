@@ -2,34 +2,41 @@
 title: Sample Post
 layout: post
 post-image: "https://raw.githubusercontent.com/thedevslot/WhatATheme/master/assets/images/SamplePost.png?token=AHMQUEPC4IFADOF5VG4QVN26Z64GG"
-description: A sample post to show how the content will look and how will different
+description:
+  A sample post to show how the content will look and how will different
   headlines, quotes and codes will be represented.
 tags:
-- sample
-- post
-- test
+  - sample
+  - post
+  - test
 ---
 
 This post will show you how the content will look like in the post pages and how the headlines, quotes and quotes will be represented. Jekyll is mainly used to write simple markdown and after that it renders out a static pages, so you need to know the basics of writing markdown for that.
 For more information about writing markdown you can checkout the following markdown cheatsheets:
-* [Mastering Markdown](https://guides.github.com/features/mastering-markdown/)
-* [Markdown Guide](https://www.markdownguide.org/cheat-sheet/)
-* [GitHub Flavored Markdown Spec](https://github.github.com/gfm/)
+
+- [Mastering Markdown](https://guides.github.com/features/mastering-markdown/)
+- [Markdown Guide](https://www.markdownguide.org/cheat-sheet/)
+- [GitHub Flavored Markdown Spec](https://github.github.com/gfm/)
 
 ---
 
 # This is the h1 text
+
 ## This is the h2 text
+
 ### This is the h3 text
+
 #### This is the h4 text
+
 ##### This is the h5 text
+
 ###### This is the h6 text
 
 **Bold Text in the post will look like:**<br>
 **This text is Bold**
 
 **Italic Text in the post will look like:**<br>
-*This text is Italic*
+_This text is Italic_
 
 > Quotes on your post will look like this
 
@@ -39,13 +46,15 @@ For more information about writing markdown you can checkout the following markd
 [This is a link](#)
 
 **Bullet list in the post will look like:**
-* Item 1
-* Item 2
-* Item 3
-* Item 4
-* Item 5
+
+- Item 1
+- Item 2
+- Item 3
+- Item 4
+- Item 5
 
 **Number list in the post will look like:**
+
 1. Item 1
 2. Item 2
 3. Item 3
@@ -65,7 +74,9 @@ Vestibulum vitae fermentum velit, rhoncus egestas orci. Nulla at purus ut orci p
 Donec imperdiet, lectus eget congue cursus, dolor enim finibus risus, ut molestie lorem tellus non tortor. Donec quam nibh, molestie in dapibus et, efficitur non tortor. Morbi orci tellus, mollis vel mi vitae, auctor lobortis erat. Ut gravida velit eget ligula lacinia, id rhoncus tellus gravida. Maecenas laoreet rutrum consequat. Suspendisse sed nibh dui. Curabitur dictum euismod mollis. Sed egestas libero libero, eu accumsan augue placerat non. Nunc id condimentum orci. Mauris vitae sollicitudin quam.
 
 **Giphy Gifs will look like:**<br>
+
 <iframe src="https://giphy.com/embed/ZqlvCTNHpqrio" width="480" height="259" frameBorder="0" class="giphy-embed" allowFullScreen></iframe><p><a href="https://giphy.com/gifs/laughing-despicable-me-minions-ZqlvCTNHpqrio">via GIPHY</a></p>
 
 **YouTUbe Videos will look like:**<br>
+
 <iframe width="560" height="315" src="https://www.youtube.com/embed/jTPXwbDtIpA" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
