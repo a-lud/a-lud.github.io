@@ -2,11 +2,7 @@
   image: https://nextflow-io.github.io/nf-hack18/assets/nextflow_logo.png
   link: https://github.com/a-lud/nf-pipelines
   description: >-
-    A goal of mine in my PhD is to implement as many large tasks as workflows as possible.
-    This is for a couple of reasons; A) It makes my life easier when I want to re-run data B)
-    It makes me work through what I'm trying to achieve with the pipeline, rather than diving
-    head first into something without any real strategy and C) it allows for reporducible
-    research.
+    A PhD goal is to implement as many tasks as Nextflow workflows as possisble.
 
 # - name: Second Project
 #   link:
