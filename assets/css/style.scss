@@ -5,16 +5,11 @@
 
 #navbar {
   opacity: 0.95;
+  background: rgba(0, 0, 0, 0);
 }
 
 .is-active {
   font-weight: 600;
-}
-
-.navbar-dropdown {
-  border: none;
-  right: 0;
-  left: auto;
 }
 
 a.navbar-item:hover,
@@ -58,7 +53,8 @@ a.navbar-item.is-active {
 
   &::before {
     filter: blur(0.15rem);
-    background-image: url({{site.heroimage}});
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url({{site.heroimage}});
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -68,7 +64,7 @@ a.navbar-item.is-active {
     bottom: 0px;
     left: 0px;
     position: absolute;
-    opacity: 0.25;
+    // opacity: 0.25;
     content: "";
   }
 }
@@ -101,20 +97,13 @@ a.navbar-item.is-active {
     display: flex;
     justify-content: center;
   }
-
-  svg {
-    transition: all 0.15s ease-in-out;
-    margin: auto 0.75vmax;
-
-    &:hover {
-      transform: scale(1.1);
-      filter: opacity(0.75);
-    }
-  }
-
-  hr {
-    background-color: black;
-  }
+  // filter: blur(0.15rem);
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+    url({{site.heroimage}});
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
 }
 
 #blog {
