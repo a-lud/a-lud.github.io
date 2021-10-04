@@ -3,3 +3,8 @@
   link: https://github.com/a-lud/nf-pipelines
   description: >-
     A PhD goal is to implement as many tasks as Nextflow workflows as possisble.
+- name: Shiny Sample Management
+  image: https://www.rstudio.com/assets/img/og/shiny-og-fb.jpg
+  link: https://github.com/a-lud/sample-management
+  description: >-
+    Create a sample-management-application for my lab-group
