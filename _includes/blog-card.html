@@ -16,7 +16,7 @@
   </div>
   <a href="{{post.url | absolute_url}}">
     <div class="column has-text-left-desktop has-text-left-tablet">
-      <h1 class="title is-size-4-touch">{{post.title}}</h1>
+      <h1 class="title is-size-4-touch has-text-white">{{post.title}}</h1>
       <div class="content has-text-white">
         {{ post.content | truncate: 300 | strip_html | strip_newlines | strip |
         escape }}
