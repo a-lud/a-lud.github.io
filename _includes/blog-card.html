@@ -17,11 +17,11 @@
   <a href="{{post.url | absolute_url}}">
     <div class="column has-text-left-desktop has-text-left-tablet">
       <h1 class="title is-size-4-touch">{{post.title}}</h1>
-      <div class="content has-text-grey">
+      <div class="content has-text-white">
         {{ post.content | truncate: 300 | strip_html | strip_newlines | strip |
         escape }}
-        <hr class="has-background-grey" />
-        <span class="has-text-grey"
+        <hr class="has-background-white" />
+        <span class="has-text-white"
           >Published on
           <span class="has-text-weight-semibold"
             >{{ post.date | date: "%-B %d, %Y" }}</span
