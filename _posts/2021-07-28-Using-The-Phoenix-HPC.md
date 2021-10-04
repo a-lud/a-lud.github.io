@@ -56,7 +56,9 @@ access to Phoenix, you simply need run the following to log in (using your unive
 $ ssh a1234567@phoenix-login1.adelaide.edu.au
 ```
 
-After pressign `Enter`, you'll be greeted with a page of text and the requirement to enter your university password. Do that and you should see the prompt return. It should looks similar to the following:
+After pressign `Enter`, you'll be greeted with a page of text and the requirement to enter your
+university password. Do that and you should see the prompt return. It should looks similar to the
+following:
 
 ```{bash}
 (base) a1645424@l01 ~ $
