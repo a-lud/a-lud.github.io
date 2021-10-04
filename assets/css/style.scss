@@ -107,9 +107,9 @@ a.navbar-item.is-active {
 }
 
 #blog {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url({{site.heroimage}});
   .hero-body {
+    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+      url({{site.heroimage}});
     padding: 3rem 0.25rem 1rem 0.25rem;
   }
 
