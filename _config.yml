@@ -30,10 +30,11 @@ author-name: Alastair
 # URL for the Image of the Author
 author-image: "/assets/images/important.png"
 # 60 Words at most in this section
-author-about:
-  Currently a PhD student at the University of Adelaide, working in the field of Bioinformatics.
-  My work mainly revolves around genome assembly, annotation, comparative genomics and population genetics.
-  On the side I do some Bioinformatics work at SAHMRI.
+author-about: >-
+  Currently I am a PhD candidate at the University of Adelaide, with a focus on genomics and
+  Bioinformatics. My my areas of work include genome assembly and annotation, comparative genomics,
+  population genetics and evolutionary biology. I'm a strong proponent of reproducible research and
+  attempt to pipeline my workflows and make public my own code where possible.
 
 # URL to the Author's Profile (i.e., Github, Twitter, Stackoverflow, etc)
 author-url: https://github.com/a-lud
