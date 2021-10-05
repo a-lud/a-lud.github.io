@@ -52,7 +52,7 @@ It is there to represent the _bash-prompt_.
 My preferred approach to access Phoenix is at the command-line using `SSH`. Once you've been given
 access to Phoenix, you simply need run the following to log in (using your university credentials).
 
-```{bash}
+```bash
 $ ssh a1234567@phoenix-login1.adelaide.edu.au
 ```
 
@@ -71,7 +71,7 @@ for logging in can be found [here][phoenix_login], which may be useful for non M
 
 The default shell on Phoenix is `Tcsh` and we want `Bash`. Run the following **once**.
 
-```{bash}
+```bash
 $ rcshell -s /bin/bash
 ```
 
@@ -119,7 +119,7 @@ In the examples I provide below, I use the following `rsync` arguments:
 
 There are many, many more which can be accessed by calling the man page or help page.
 
-```{bash}
+```bash
 $ man rsync        # Manual page
 $ rsync --help     # Help page
 ```
@@ -128,7 +128,7 @@ $ rsync --help     # Help page
 
 Below is an example command of copy data from our local machine to our `HPCFS` directory on Phoenix.
 
-```{bash}
+```bash
 $ rsync -avP file.txt a1234567@phoenix-login1.adelaide.edu.au:/hpcfs/users/a123456/directory
 ```
 
@@ -140,7 +140,7 @@ To copy more than one file we can either list them all in the command, or use `g
 share a common pattern. Below I've written an example of copying all files in a directory that
 have the file extension `.txt`.
 
-```{bash}
+```bash
 $ rsync -avP *.txt a1234567@phoenix-login1.adelaide.edu.au:/hpcfs/users/a123456/directory
 ```
 
@@ -148,14 +148,14 @@ $ rsync -avP *.txt a1234567@phoenix-login1.adelaide.edu.au:/hpcfs/users/a123456/
 
 The order of the `rsync` arguments is always
 
-```{bash}
+```bash
 $ rsync -arguments item-to-copy destination-to-copy
 ```
 
 As such, for getting data off Phoenix, we just need to reverse the order if we're on our local
 system.
 
-```{bash}
+```bash
 $ rsync -avP a1234567@phoenix-login1.adelaide.edu.au:/hpcfs/users/a123456/directory/\*.txt /local
 ```
 
@@ -173,7 +173,7 @@ Phoenix has a module system. You can think of these as pre-installed packages th
 your current shell environment to access particular software. Run the following command to get a
 list of all available.
 
-```{bash}
+```bash
 $ module list
 ```
 
@@ -183,7 +183,7 @@ available.
 If you see a bit of software that you want to use in a script, you simply need to include the
 following in your code.
 
-```{bash}
+```bash
 $ module load FastQC/0.11.7
 ```
 
@@ -192,103 +192,268 @@ jobs environment, giving your script access to the `FastQC` software.
 
 You can load as many modules as you want, with the added benefit of the `module` system resolving
 any software conflicts if it can. However, there can be incompatibilities meaning some software
-modules will not be compatible with others. In these instances, you will recieve an error.
+modules will not be compatible with others. In these instances, you will receive an error.
 
 Therefore, it can be beneficial to try loading the software modules at the terminal on the head node,
 to check if they all play nice together.
 
 ### Conda Environments
 
-< finish this>
+Conda is an open source package and environment management system. If we set up Conda on Phoenix,
+we can pretty much install whatever software we want on to Phoenix without requiring root permissions.
+Further, it gets us away from having fixed versions of software, like with _modules_, as we can
+manage our own software installations however we please. It also handles the installation for us,
+as it installs from a recipe. This means it'll handle all the installation steps for us and should
+_hopefully_ error early and informatively if something is incompatible. Further, if you're up for it,
+Conda environments play really nicely with many workflow languages, which makes developing analysis
+pipelines considerably easier.
 
-<!-- Conda is a package management system
+#### Check Conda is working
 
-A really handy method for getting software is to create a conda environment. The Phoenix Wiki has a great guide on how to set up your Phoenix account to be able to create these environments: https://wiki.adelaide.edu.au/hpc/Anaconda
+The University of Adelaide HPC wiki has a really nice [guide][conda] relating to getting started
+with Conda. Here, I'll show the main commands that are most important when it comes to getting going.
 
-Conda environments are kind of like containers. They enable you to install a range of software locally without the hastle of you having to go through the manual process. It handles all of the nitty gritty, like permissions and install locations, so all you're left with is an environment that has the software you want.
+First, we need to check that the `conda` executable is in our path. At the command line run the
+following:
 
-You can create any number of environments, meaning it's often a good idea to create an environment for a specific analysis or bit of software that isn't available on Phoenix. You activate the environment at the beginning of a submission script on Phoenix, which makes all the software in the environment available, and then deactivate it at the end.
-
-See the Wiki link above for examples of setting up your Phoenix account for conda and creating an environment with software.
-
-**Local installation**
-
-It's also possible to build software locally from source if it is not available on Phoenix as a module or not available as a conda install. For this I'd recommend creating your own software directory on your `FAST` drive and download software there.
-
-This can get involved and cumbersome so I'd only do this as a last resort if the above two methods are not an option.
-
-## Submitting jobs
-
-Now that we've covered how to log on to Phoenix, copy data to Phoenix and get the software we need, we can look at running an analysis on Phoenix.
-
-Let's say we have a script `task.sh` that we want to run. To submit this script to the resource management tool SLURM for job scheduling, we need to create a submission script. I've included a template of what I generally include in my submission scripts below. Let's say these go into a script `task_submission.sh`.
-
+```bash
+$ conda -h
 ```
-#!/bin/bash
-#SBATCH --job-name=run_test_script
+
+If `conda` is not installed, you'll likely get an error saying that the system can't find any
+software called `conda`. In that case, run the following command:
+
+```bash
+$ module load Anaconda3/2020.07
+```
+
+I'm pretty certain that `conda` is now in everyone's path by default, so you **shouldn't** need to
+run the module command above.
+
+#### Configure Conda
+
+Now that we know `conda` is working, we need to configure it a little bit. What we're first going to
+do is specify **two** directories - a _packages_ directory and a _environments_ directory. At the
+command line, run the following commands to configure each:
+
+```bash
+$ conda config --prepend pkgs_dirs /hpcfs/users/$USER/myconda/pkgs
+$ conda config --prepend envs_dirs /hpcfs/users/$USER/myconda/envs
+```
+
+Those two commands have just set the respective paths to where packages and environments will be
+installed - i.e. these are the destinations where software will be installed and where environments
+will be housed.
+
+Next, we will likely want to add a few `channels` to our configuration. Channels are essentially where
+`conda` checks when it tries to install some software. Much like we might look in a few standard places
+when we lose something, `conda` will check some 'standard' channels for a package when trying to
+install something. We can add to the places `conda` will look by adding extra channels that we know
+are useful. To do this, use the following command:
+
+```bash
+$ conda config --add channels <channelName>
+```
+
+Where `<channelName>` is your desired channel. Common channels to add include:
+
+- conda-forge
+- bioconda
+- anaconda
+
+With those three channels, you can pretty much guarantee you'll be able to find most common software.
+
+#### Installing Software and Creating Environments
+
+Now that we've configure `conda`, we can install software and create environments. Before we do that,
+I'll first break down what an environment is.
+
+If you tried to install a piece of software from scratch on Phoenix, you'd probably be met with a lot
+of permission errors. This is because as a **user** you do not have permission to read and write from
+certain locations on the computer. As such, this makes installing software difficult.
+
+This is where `conda` environments come in. A `conda` envrionment is essentially a self-contained
+bubble where we can essentially have all the permissions we could ever need to install anything we
+want. First we need to create an environment:
+
+```bash
+$ conda create -n EXAMPLE_ENV
+```
+
+The above command would create a simple environment with the default packages `conda` installs.
+Once we've created an environment, we need to activate it:
+
+```bash
+$ conda activate EXAMPLE_ENV
+(EXAMPLE_ENV) $
+```
+
+What you'll notice once you've activated an environment is the `prompt` changing. It'll now show
+which environment is active (see braces in code chunk above). Whilst active, we can install watever
+software we want using conda or other package managers (e.g. `pip` but I'm not going into that here).
+For example, we might install a text reader called `bat`:
+
+```bash
+$ conda install -c conda-forge bat
+```
+
+In the above command I've called the `install` argument of `conda` and specified the channel (`-c`)
+I want to use (conda-forge). I then tell `conda` the software I want to install. That will install
+the software `bat` into the environment `EXAMPLE_ENV`, meaning whenever I activate `EXAMPLE_ENV`
+I will be able ot use `bat`.
+
+We can deactivate conda environments like so:
+
+```bash
+(EXAMPLE_ENV) $ conda deactivate
+$ ...
+```
+
+After deactivating an environment, you'll notice that the prompt goes back to normal. This means that
+the environment is no longer active and any software that is installed in that environment is no longer
+available.
+
+#### How are Conda Environments Useful?
+
+So how might these `conda` environments be useful? Well, in all sorts of ways.
+
+Consider, for example, you have some software that needs `python=2.7` and some other software for the
+same analysis that needs `python >= 3.X`. Further, imagine that we don't have many access permissions
+to our computer, as is the situation on Phoenix. Without environments, we'd have to install everything
+from source _AND_ we'd have to juggle python versions whilst doing this.
+
+With `conda` environments, we can simply create two environments and install the respective software
+in each. We don't have to worry about permissions or python versions, beyond specifying which `python`
+version each environment should have.
+
+This might looks like the following in a mock `SLURM` script:
+
+```bash
+#!/usr/bin/env bash
+#SBATCH --job-name=random-job
 #SBATCH -p batch
 #SBATCH -N 1
 #SBATCH -n 1
-#SBATCH -c 4
-#SBATCH --time=02:00:00
-#SBATCH --mem=8GB
-#SBATCH -o /path/to/slurm/stdout_file/%x_%j.out
-#SBATCH -e /path/to/slurm/stderr_file/%x_%j.err
-#SBATCH --mail-type=END
+#SBATCH -c 12
+#SBATCH --ntasks-per-core=1
+#SBATCH --time=24:00:00
+#SBATCH --mem 30GB
+#SBATCH -o /home/a1234567/slurm/%x_%j.log
 #SBATCH --mail-type=FAIL
-#SBATCH --mail-user=a1234567@adelaide.edu.au
+#SBATCH --mail-user=first.last@adelaide.edu.au
 
-## You can call a script
-bash task.sh
+# Activate Python 2 environment
+conda activate PY2.7
 
-## You can also write your code directly in the submission script
-for i in {1..10}; do
-    echo ${i}
-done
+# <code to do stuff goes here>
+
+conda deactivate
+
+
+# Activate Python 3 environment
+conda activate PY3.6
+
+# <code to do stuff goes here>
+
+conda deactivate
 ```
 
-These are some basic parameters which define the resources we're requesting of the Phoenix HPC. All are prefaced by the `#SBATCH` argument to indicate that they are parameters for the job scheduler. They are as follows:
+In the above example, we've been able to run code requiring two separate python versions super
+simply by simply activating and deactivating pre-made `conda` environments.
 
-- **#!/bin/bash** = shebang indicating this is a shell script
-- **--job-name=run_test_script** = Name of the job we are running
-- **-p batch** = The partition we are submitting the job to. Can be batch/cpu/skylake/skypool/highmem/etc...
-- **-N 1** = Number of nodes we are requesting. Generally will be 1
-- **-n 1** = Number of tasks per node we are requesting. Generally will be 1
-- **-c 4** = Number of multi-threading cores to use for our task
-- **--time=02:00:00** = Time in HH:MM:SS (max time 72hrs)
-- **--mem=8GB** = Amount of memory for the job
-- **-o /.../%x\_%j.out** = An output file that will have the job name (above) and job id. Records standard out
-- **-e /.../%x\_%j.err** = An output file that will have the job name (above) and job id. Records standard error
-- **--mail-type=END** = Email if the job ends
-- **--mail-type=FAIL** = Email if the job fails
-- **--mail-user=a1234567@adelaide.edu.au** = Email
+## Submitting Jobs to Phoenix
 
-Think about how you allocate resources. If you know you're doing a lightweight task then don't go requesting 3 days of wall-time and a tonne of memory. Getting your job to run on Phoenix is a balancing act between requesting parameters that are likely to get your job submitted quickly but also enough that they finish in a reasonable amount of time.
+Now that we know how to interact with Phoenix, the final step is to submit a job. As mentioned above,
+Phoenix uses `SLURM` to manage job submissions, which means the workflow from writing a script to
+it running on the HPC looks like the following:
 
-For example, if you asked for 1 day, 20 cores and 100Gb of memory, your job would sit in the queue for days and take a long time to being running. Once submitted it might run pretty quickly, but the excessive resources pushes the job down the queue meaning there is a huge submission delay.
+1. You write a script with the `SLURM` header information in it
+2. You submit your script to the scheduler
+3. `SLURM` dictates where your job is in the priority list
+4. Your job will run on the cluster when it's time comes
+5. You job will finish up and you'll be notified if anything has gone wrong
 
-On the other hand, if you rolled back to 8 cores and 20Gb, your job would likely fill in a resource gap and be submitted much faster. It might take a bit longer to run, but the shorter queue time and slightly longer run time would still have you coming out ahead compared to the overkill submission above.
+Let's get into a few of the points above
 
-Now we have a task script we want to run (`task.sh`) and have our submission script (`task_submission.sh`) that executes our task script. To submit the job to Phoenix we run the following command from the head node:
+### SLURM header
 
+Every job submitted to `SLURM` needs a `SLURM` header. It looks like the following:
+
+```bash
+#!/usr/bin/env bash
+#SBATCH --job-name=random-job                   # Job name
+#SBATCH -p batch                                # Cluster to submit to
+#SBATCH -N 1                                    # Number of nodes to request
+#SBATCH -n 1                                    # Number of jobs per node
+#SBATCH -c 12                                   # Number of cores per job
+#SBATCH --ntasks-per-core=1                     # This is to prevent multithreading
+#SBATCH --time=24:00:00                         # Time for the job
+#SBATCH --mem 30GB                              # Memory for the job
+#SBATCH -o /home/a1234567/slurm/%x_%j.log       # Path for log file
+#SBATCH --mail-type=FAIL                        # Email if the job fails
+#SBATCH --mail-user=first.last@adelaide.edu.au  # Email to send fail/completion email
 ```
-$ sbatch task_submission.sh
+
+Essentially, it houses the meta-data that `SLURM` will use when allocating resources for your job.
+In the above example I've commented what each line does. See the `SLURM` documentation for extra
+parameters that can be set. The arguments above are what I typically set for my own jobs.
+
+After the header you can put whatever code you want. I generally will just put any bash code after
+the header rather than in a separate file, but feel free to write a separate script that gets called
+from the submission script if you so please.
+
+```bash
+#!/usr/bin/env bash
+#SBATCH --job-name=random-job
+#SBATCH -p batch
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH -c 12
+#SBATCH --ntasks-per-core=1
+#SBATCH --time=24:00:00
+#SBATCH --mem 30GB
+#SBATCH -o /home/a1234567/slurm/%x_%j.log
+#SBATCH --mail-type=FAIL
+#SBATCH --mail-user=first.last@adelaide.edu.au
+
+samtools view \
+  -b \
+  -h \
+  -q 20 \
+  ${BAM}/input.bam
+
+# etc...
 ```
 
-This will now queue our job and will run the code in `task.sh` with the resources we've requested in `task_submission.sh`
+### Submitting Jobs
 
-## Monitoring Jobs
+To submit a script like the one above to the cluster, simply call the following command:
 
-It's possible to monitor the run time of jobs using the command `squeue -u a1234567`. This will provide you with a list of jobs that are currently submitted, what node they're running on and how long they've been running for. You can also check the state of a running job or a job that has finished running using the command `rcstat jobid` where _jobid_ is the numerical value assigned to a submitted job.
-
-## Cancelling jobs
-
-To cancel a job that is running, simply run the following code
-
+```bash
+$ sbatch name-of-script.sh
 ```
-$ scancel jobid
-``` -->
+
+### Monitoring Jobs and Cancelling Jobs
+
+To monitor how your job is tracking, you can use the command `squeue`. Essentially you just need to
+run the following:
+
+```bash
+$ squeue -u a1234567
+```
+
+This will provide you with some information about how long the job has been running and how
+much wall time was requested.
+
+To cancel a job, simply run the command:
+
+```bash
+$ scancel -u jobid
+```
+
+Where `jobid` is replaced with the actual job identifier obtained from `squeue`.
 
 [phoenix_wiki]: https://wiki.adelaide.edu.au/hpc/index.php/Main_Page
 [phoenix_allocations]: https://wiki.adelaide.edu.au/hpc/Phoenix/Hardware
 [phoenix_login]: https://wiki.adelaide.edu.au/hpc/Connecting_to_Phoenix
+[conda]: https://wiki.adelaide.edu.au/hpc/Anaconda
