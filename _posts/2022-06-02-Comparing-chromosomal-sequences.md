@@ -62,7 +62,7 @@ one organism to another, before using that annotation to show syntenic regions b
 sequences with `MCscan`. 
 
 I've generated a couple of test datasets to work with which are chromosome 1 from *Hydrophis major* and
-*Hydrophis cyanocinctus*. These files are located on Box at `Box:synteny-tutorial`. They'll be used throughout
+*Hydrophis cyanocinctus*. These files are located on Box at [`Box:synteny-tutorial`][box]. They'll be used throughout
 this whole tutorial. In addition to the raw files, I've also included example scripts for every stage of
 this tutorial, along with the outputs. I recommend making a directory of your own following the same
 structure and running the analyses yourself, using the scripts as a guide.
@@ -393,3 +393,4 @@ not used it before, but I'll try and write a tutorial for it once I've had a go.
 [gffread]: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
 [last]: https://gitlab.com/mcfrith/last
 [syri]: https://github.com/schneebergerlab/syri
+[box]: https://universityofadelaide.box.com/s/7o5lo4oyroatzo504oqexgi6kqfpoly3
