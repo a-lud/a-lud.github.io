@@ -198,10 +198,12 @@ The steps above were just to generate annotations for our sequences of interest.
 is to actually align and compare the `hydmaj` and `hydcur` chromosome-1 sequences. The files we've
 created above (`GFF3` and `CDS`) will be utilised by `MCScan` to conduct this analysis.
 
+The script `02-mcscan.sh` contains working code for all the examples shown below for samples *H. major*
+and *H. curtus*.
 ## Prepare your files
 
 Before we can run `MCScan`, we need to prepare our files a little bit. All the steps from here
-on have been taken from the `MCScan` tutorial.
+on have been taken from the [`MCScan` tutorial][mcscan].
 
 First, we need to convert our `GFF3` files to `BED` format. `MCScan` comes with an accessory
 function to do this.
@@ -214,8 +216,7 @@ In the example above, we call the python module `jcvi.formats.gff` and specify t
 convert our `GFF3` files into `BED` format (`bed`). We specify the type of feature we want to get
 the coordinates for (`--type=mRNA`) and which attribute to extract (`--key=Name`). **NOTE**: if
 `Name` doesn't work in the key field, try `--key=ID`. We then provide the `GFF3` file, along with
-an output file (`-o`). An example of how to do this for both files is provided in the script
-`02-mcscan.sh`.
+an output file (`-o`).
 
 ## Ortholog search
 
@@ -240,14 +241,23 @@ clustered to find synteny blocks. Once this process finishes, the whole-genome-a
 A number of output files will be produced at this stage, but the key ones are those that end in
 `.anchors`.
 
+```text
+mcscan
+├── hydmaj.hydcur.anchors
+├── hydmaj.hydcur.last
+├── hydmaj.hydcur.last.filtered
+└──  hydmaj.hydcur.lifted.anchors
+```
+
 ## Pairwise synteny: Dotplots
 
 Now that we've generated our synteny blocks, we might want to generate some utility plots
 to help visualise how well the genomes aligned. Dotplots are a really simple visualisation
 method that can provide a quick summary of how well sequences aligned.
 
-The previous command will automatically produce the dotplot file `hydmaj.hydcur.pdf`. Another
-way to generate dotplot files is through the command below.
+The previous ortholog command will automatically produce the dotplot file `hydmaj.hydcur.pdf`
+in the `mcscan` directory. Another way to generate dotplot figures is by running the following
+command.
 
 ```bash
 python3 -m jcvi.graphics.dotplot --skipempty --format=png -o dotplot.png hydmaj.hydcur.anchors
@@ -259,6 +269,8 @@ The dotplot shows fine grain synteny and should look similar to the following.
 
 ![Dotplot between H. major and H.curtus chromosome 1](../assets/images/hydmaj.hydcur.png)
 
+
+Each dot in the figure represents genes that are shared between the two samples.
 ## Types of orthologs
 
 In addition to visualising the dotplots, it may also be interesting to know what kinds of orthologs
@@ -285,12 +297,15 @@ a quater of each snakes genes missing from the other.
 
 To generate the ribbon plots, we'll need to create a couple of extra files. The first is a simple `seqids` file.
 This is literally a two-line file with the chromosome name of *H. major* and *H. curtus* on each line. Normally,
-if you had many chromosomes, you'd order them here in this file. An example is below.
+if you had many chromosomes, you'd order them here in this file. The `seqid` file for the data in this tutorial
+is shown below.
 
 ```text
 chr1
 CM033602.1
 ```
+
+<br/>
 
 Next, we need to create a layout file, which tells the program where to draw what. If you want to know what
 all the fields mean, check out the [documentation][mcscan]. The layout file should look like the following.
@@ -303,12 +318,16 @@ all the fields mean, check out the [documentation][mcscan]. The layout file shou
 e, 0, 1, hydmaj.hydcur.anchors.simple
 ```
 
+<br/>
+
 You'll notice that there is the file `hydmaj.hydcur.anchors.simple` which doesn't exist yet. To create this
 we need to run the following command.
 
 ```bash
 python3 -m jcvi.compara.synteny screen --minspan=30 --simple hydmaj.hydcur.anchors hydmaj.hydcur.anchors.new 
 ```
+
+<br/>
 
 This creates a subset of the `hydmaj.hydcur.anchors` file, a more sussinct form of the anchors file for plotting.
 
@@ -318,7 +337,9 @@ With all that done, we can now produce the ribbon plot by running this command.
 python3 -m jcvi.graphics.karyotype --basepair --format=png seqids layout
 ```
 
-Which will produce an output `karyotype.png`
+Which will produce an output `karyotype.png` showing the synteny between the two chromosomes.
+
+<br/>
 
 ![](../assets/images/karyotype.png)
 
