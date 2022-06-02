@@ -28,7 +28,7 @@ of informative plots along the way.
 
 # Background and software
 
-[`MCScan`][mcscan] is a tool written in python for enabling the comparison of whole genome sequences with
+[`MCscan`][mcscan] is a tool written in python for enabling the comparison of whole genome sequences with
 relative ease. Typically, aligning whole chromosomes is a computationally intensive task. `MCscan` gets
 around this problem by using gene sequences as anchors to aid alignment. For example, let's say we
 have two chromosomal sequences that we know are homologs.
@@ -41,7 +41,7 @@ Seq2    <-----------------------------------------------------------------------
 
 <br/>
 
-`MCScan` uses genes as anchors to help alignment. Knowing that certain genes are shared between the
+`MCscan` uses genes as anchors to help alignment. Knowing that certain genes are shared between the
 two sequences helps locate alignment seeds (i.e. shared regions that can be aligned). Further, as the
 clustering of genes is ususally pretty conserved, aligners can use this information to better identify
 larger syntenic regions prior to conducting base-pair alignment, greatly simplifying the overall alignment
@@ -59,7 +59,7 @@ seq2    |------------------------|         |-----------|       |----------------
 
 In this tutorial, I'll walk through how to use [`Liftoff`][liftoff] to lift an annotation from
 one organism to another, before using that annotation to show syntenic regions between two chromosomal
-sequences with `MCScan`. 
+sequences with `MCscan`. 
 
 I've generated a couple of test datasets to work with which are chromosome 1 from *Hydrophis major* and
 *Hydrophis cyanocinctus*. These files are located on Box at `Box:synteny-tutorial`. They'll be used throughout
@@ -102,7 +102,7 @@ synteny-tutorial
 
 # Step 1: Gene annotation
 
-As stated above, `MCScan` uses gene annotations to find homologous regions between sequences to aid alignment.
+As stated above, `MCscan` uses gene annotations to find homologous regions between sequences to aid alignment.
 If you have a genome assembly without an annotation file, it's possible to make one that'll do the job for
 alignment purposes. The tool for the job is `Liftoff`, which lifts over the gene annotation of an evolutionarily
 close organism onto your genome of interest. However, there are a few caveats to its use:
@@ -127,7 +127,7 @@ conda create -n synteny -c bioconda liftoff gffread last jcvi more-itertools
 <br/>
 
 The command above will create a conda environment `synteny` and install the software `liftoff`,
-`gffread`, `last` and `jcvi` (contains `MCScan`) within it.
+`gffread`, `last` and `jcvi` (contains `MCscan`) within it.
 
 The `conda` environment can be activated using the command
 
@@ -202,18 +202,18 @@ In the call above, the output file (`-y`)  will house the coding sequence for th
 be lifted over to our genome of interest. An example of this is provided at the bottom of the script
 `01-liftoff.sh`.
 
-# Step 2: MCScan
+# Step 2: MCscan
 
 The steps above were just to generate annotations for our sequences of interest. The next step
 is to actually align and compare the `hydmaj` and `hydcur` chromosome 1 sequences. The files we've
-created above (`GFF3` and `CDS`) will be utilised by `MCScan` to conduct this analysis.
+created above (`GFF3` and `CDS`) will be utilised by `MCscan` to conduct this analysis.
 
 The script `02-mcscan.sh` contains working code for all the examples shown below for samples *H. major*
 and *H. curtus*.
 ## Prepare your files
 
-Before we can run `MCScan`, we need to prepare our files a little bit. All the steps from here
-on have been taken from the `MCScan` [tutorial][mcscan].
+Before we can run `MCscan`, we need to prepare our files a little bit. All the steps from here
+on have been taken from the `MCscan` [tutorial][mcscan].
 
 First, we change into the `mcscan` directory.
 
@@ -223,10 +223,10 @@ cd /path/to/synteny-tutorial/mcscan
 
 <br/>
 
-We need to do this as all `MCScan` commands expect the files to be in the current working directory.
+We need to do this as all `MCscan` commands expect the files to be in the current working directory.
 The script `02-mcscan.sh` automatically changes into this directory and outputs the files here.
 
-We then need to convert our `GFF3` files to `BED` format. `MCScan` comes with an accessory function
+We then need to convert our `GFF3` files to `BED` format. `MCscan` comes with an accessory function
 to do this.
 
 ```bash
@@ -383,7 +383,7 @@ The final output will be `karyotype.png` showing the synteny between the two chr
 # What next?
 
 I've only scratched the surface of what you can do with these kinds of figures. I highly recommend checking
-out the [`MCScan`][mcscan] documentation to see how you can take the figures further. For more granular
+out the [`MCscan`][mcscan] documentation to see how you can take the figures further. For more granular
 synteny comparisons, I recommend checking out [`Syri`][syri], another structural rearrangement tool. I've
 not used it before, but I'll try and write a tutorial for it once I've had a go.
 
