@@ -68,30 +68,35 @@ this tutorial, along with the outputs. I recommend making a directory of your ow
 structure and running the analyses yourself, using the scripts as a guide.
 
 ```bash
-figures
-├── hydmaj.hydcur.depth.png
-├── hydmaj.hydcur.png
-└── karyotype.png
-liftoff-results
-├── hydcur.cds
-├── hydcur.gff3
-├── hydmaj.cds
-└── hydmaj.gff3
-mcscan
-├── hydcur.bck
-├── ..truncated...
-└── seqids
-reference-genome
-├── tiger-reference.fa
-├── tiger-reference.fa.fai
-├── tiger-reference.gff3
-└── tiger-reference.gff3_db
-scripts
-├── 01-liftoff.sh
-└── 02-mcscan.sh
-seqs
-├── hydcur.fa
-└── hydmaj.fa
+synteny-tutorial
+├── figures
+│   ├── hydmaj.hydcur.depth.png
+│   ├── hydmaj.hydcur.dotplot.png
+│   └── karyotype.png
+├── liftoff-results
+│   ├── hydcur.cds
+│   ├── hydcur.gff3
+│   ├── hydmaj.cds
+│   └── hydmaj.gff3
+├── mcscan
+│   ├── hydmaj.hydcur.anchors
+│   ├── ..truncated..
+│   └── seqids
+├── reference-genome
+│   ├── tiger-reference.fa
+│   ├── tiger-reference.fa.fai
+│   ├── tiger-reference.gff3
+│   └── tiger-reference.gff3_db
+├── scripts
+│   ├── 01-liftoff.sh
+│   └── 02-mcscan.sh
+└── seqs
+    ├── hydcur.fa
+    ├── hydcur.fa.fai
+    ├── hydcur.fa.mmi
+    ├── hydmaj.fa
+    ├── hydmaj.fa.fai
+    └── hydmaj.fa.mmi
 ```
 
 
