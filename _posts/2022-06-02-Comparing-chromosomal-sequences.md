@@ -337,13 +337,14 @@ With all that done, we can now produce the ribbon plot by running this command.
 python3 -m jcvi.graphics.karyotype --basepair --format=png seqids layout
 ```
 
-Which will produce an output `karyotype.png` showing the synteny between the two chromosomes.
+<br/>
+
+The argument `--basepair` uses the sequence length to scale the chromosomes, rather than the synteny chunks.
+The final output will be `karyotype.png` showing the synteny between the two chromosomes.
 
 <br/>
 
 ![](../assets/images/karyotype.png)
-
-<br/>
 
 [mcscan]: https://github.com/tanghaibao/jcvi/wiki/MCscan-(Python-version)
 [liftoff]: https://github.com/agshumate/Liftoff
