@@ -15,6 +15,17 @@ a ribbon plot between two chromosomes.
 
 ---
 
+<!--ts-->
+- [Introduction](#introduction)
+  - [Background and software](#background-and-software)
+- [Step 1: Gene annotation](#step-1-gene-annotation)
+  - [Install the software](#install-the-software)
+  - [Prep your input files](#prep-your-input-files)
+  - [Liftoff script](#liftoff-script)
+  - [Extract CDS sequences](#extract-cds-sequences)
+- [Step 2: MCScan](#step-2-mcscan)
+<!--te-->
+
 # Introduction
 
 Often we'll want to comapre genetic sequences to identify structural similarities or differences.
@@ -129,7 +140,7 @@ gffread your.genome.gff3 \
 In the call above, the output file passed to `-y`  will house the coding sequences for the genes that could
 be lifted over to our genome of interest.
 
-## MCScan
+# Step 2: MCScan
 
 [mcscan]: https://github.com/tanghaibao/jcvi/wiki/MCscan-(Python-version)
 [liftoff]: https://github.com/agshumate/Liftoff
