@@ -62,31 +62,36 @@ one organism to another, before using that annotation to show syntenic regions b
 sequences with `MCScan`. 
 
 I've generated a couple of test datasets to work with which are chromosome 1 from *Hydrophis major* and
-*Hydrophis cyanocinctus*. These files are located on Box at `/path/goes/here`. They'll be used throughout
+*Hydrophis cyanocinctus*. These files are located on Box at `Box:synteny-tutorial`. They'll be used throughout
 this whole tutorial. In addition to the raw files, I've also included example scripts for every stage of
 this tutorial, along with the outputs. I recommend making a directory of your own following the same
 structure and running the analyses yourself, using the scripts as a guide.
 
 ```bash
-synteny-tutorial/
-|-- liftoff-results
-|   |-- hydcur.log
-|   └── hydmaj.log
-|-- mcscan
-|-- reference-genome
-|   |-- tiger-reference.fa
-|   |-- tiger-reference.fa.fai
-|   |-- tiger-reference.gff3
-|   └── tiger-reference.gff3_db
-|-- scripts
-|   |-- 01-liftoff.sh
-|   └── intermediate_files
-└── seqs
-    |-- hydcur.fa
-    |-- hydcur.fa.fai
-    |-- hydmaj.fa
-    |-- hydmaj.fa.fai
-    └── hydmaj.fa.mmi
+figures
+├── hydmaj.hydcur.depth.png
+├── hydmaj.hydcur.png
+└── karyotype.png
+liftoff-results
+├── hydcur.cds
+├── hydcur.gff3
+├── hydmaj.cds
+└── hydmaj.gff3
+mcscan
+├── hydcur.bck
+├── ..truncated...
+└── seqids
+reference-genome
+├── tiger-reference.fa
+├── tiger-reference.fa.fai
+├── tiger-reference.gff3
+└── tiger-reference.gff3_db
+scripts
+├── 01-liftoff.sh
+└── 02-mcscan.sh
+seqs
+├── hydcur.fa
+└── hydmaj.fa
 ```
 
 
@@ -98,7 +103,7 @@ alignment purposes. The tool for the job is `Liftoff`, which lifts over the gene
 close organism onto your genome of interest. However, there are a few caveats to its use:
 
 - The organism that you lift from needs to be evolutionarily close, otherwise you'll have few genes lift-over.
-- The gene models produced on your genoem will be accurate, but are not to be taken as gospel.
+- The gene models produced on your genome will be accurate, but are not to be taken as gospel.
 - Ensure your genome is of sufficient completeness. Fragmented genomes will have fewer genes lift over due to missing genetic content.
 - The output annotation will only have genes found in the reference file! Novel genes will not be annotated.
 
@@ -138,9 +143,9 @@ command above).
 2. **`reference.genome.fasta`**: the genome that you want to lift annotations from
 3. **`reference.genome.gff3`**: the gene annotations for the reference genome
 
-In our test dataset, `hydcur.fa` and `hydmaj.fa` take the place of`your.genome.fasta`.
-The reference genomne we're going to lift annotations from is the tiger snake (`tiger-reference`),
-which takes the role of the `reference.genome` files.
+In our test dataset, `hydcur.fa` and `hydmaj.fa` take the place of`your.genome.fasta`. These are
+the chromosome 1 sequences from each snake. The reference genome we're going to lift annotations
+from is the tiger snake (`tiger-reference`), which takes the role of the `reference.genome` files.
 
 ## Liftoff script
 
@@ -195,7 +200,7 @@ be lifted over to our genome of interest. An example of this is provided at the 
 # Step 2: MCScan
 
 The steps above were just to generate annotations for our sequences of interest. The next step
-is to actually align and compare the `hydmaj` and `hydcur` chromosome-1 sequences. The files we've
+is to actually align and compare the `hydmaj` and `hydcur` chromosome 1 sequences. The files we've
 created above (`GFF3` and `CDS`) will be utilised by `MCScan` to conduct this analysis.
 
 The script `02-mcscan.sh` contains working code for all the examples shown below for samples *H. major*
@@ -203,14 +208,27 @@ and *H. curtus*.
 ## Prepare your files
 
 Before we can run `MCScan`, we need to prepare our files a little bit. All the steps from here
-on have been taken from the [`MCScan` tutorial][mcscan].
+on have been taken from the `MCScan` [tutorial][mcscan].
 
-First, we need to convert our `GFF3` files to `BED` format. `MCScan` comes with an accessory
-function to do this.
+First, we change into the `mcscan` directory.
+
+```bash
+cd /path/to/synteny-tutorial/mcscan
+```
+
+<br/>
+
+We need to do this as all `MCScan` commands expect the files to be in the current working directory.
+The script `02-mcscan.sh` automatically changes into this directory and outputs the files here.
+
+We then need to convert our `GFF3` files to `BED` format. `MCScan` comes with an accessory function
+to do this.
 
 ```bash
 python3 -m jcvi.formats.gff bed --type=mRNA --key=Name hydmaj.gff3 -o hydmaj.bed
 ```
+
+<br/>
 
 In the example above, we call the python module `jcvi.formats.gff` and specify that we want to
 convert our `GFF3` files into `BED` format (`bed`). We specify the type of feature we want to get
@@ -224,13 +242,13 @@ Now that we have clean files, we can move on to finding orthologous sequences be
 snakes. To do this, we'll use the following command.
 
 ```bash
-python3 -m jcvi.compara.catalog ortholog hydmaj hydcur --no_strip_names
+python3 -m jcvi.compara.catalog ortholog --cpus=4 hydmaj hydcur --no_strip_names
 ```
 
 <br/>
 
 The command above searches the current directory for `.bed` and `.cds` files matching
-`your.genome` and `reference.compare` - e.g. `hydmaj.bed`, `hydcur.cds`. The argument
+`your.genome` and `reference.compare` - e.g. `hydmaj.bed`, `hydmaj.cds`. The argument
 `--no_strip_names` is important as it will prevent the stripping of alternative-splice-isoform
 identifiers from the sequence headers.
 
@@ -249,10 +267,14 @@ mcscan
 └──  hydmaj.hydcur.lifted.anchors
 ```
 
+The `jcvi.compara.catalog ortholog` step will likely take the longest amount of time. As such, it's
+recommended to run this command on a cluster where you can provide more cores to get it to run
+faster.
+
 ## Pairwise synteny: Dotplots
 
-Now that we've generated our synteny blocks, we might want to generate some utility plots
-to help visualise how well the genomes aligned. Dotplots are a really simple visualisation
+Now that we've aligned the chromosomes, we might want to generate some utility plots
+to help visualise how well the sequences aligned. Dotplots are a really simple visualisation
 method that can provide a quick summary of how well sequences aligned.
 
 The previous ortholog command will automatically produce the dotplot file `hydmaj.hydcur.pdf`
@@ -260,17 +282,23 @@ in the `mcscan` directory. Another way to generate dotplot figures is by running
 command.
 
 ```bash
-python3 -m jcvi.graphics.dotplot --skipempty --format=png -o dotplot.png hydmaj.hydcur.anchors
+python3 -m jcvi.graphics.dotplot --skipempty --format=png -o hydmaj.hydcur.dotplot.png hydmaj.hydcur.anchors
 ```
 
 <br/>
+
+The argument `==skipempty` ignores empty chromosomes that did not align (not applicable when
+we're only comparing two, homologous sequences). I also specify the output format to be PNG using
+`--format`. Finally, the name for the output file can be specified with `-o`.
 
 The dotplot shows fine grain synteny and should look similar to the following.
 
 ![Dotplot between H. major and H.curtus chromosome 1](../assets/images/hydmaj.hydcur.png)
 
-
-Each dot in the figure represents genes that are shared between the two samples.
+Each dot in the figure represents genes that are shared between the two samples. For the most part, these
+sequences are highly similar (the diagonal is straight down from top left to bottom right). There are some
+small regions where there are no dots at all, indicating variation between the two sequences. Further,
+there are some slight off-diagonal dots, indicating inverted sequences or duplicated genes.
 ## Types of orthologs
 
 In addition to visualising the dotplots, it may also be interesting to know what kinds of orthologs
@@ -284,9 +312,10 @@ python3 -m jcvi.compara.synteny depth --histogram hydmaj.hydcur.anchors
 
 This command will produce a histogram file showing the multiplicity of genes between the two sequences.
 Ideally, all genes would be in the `1` column, however it's not to be unexpected that some genes are
-missing or have undergone duplications.
+missing or have undergone duplications. This is especially true for this test dataset, as the annotation
+has been lifted-over from a totally different species.
 
-![](../assets/images/hydmaj.hydcur.depth.png)
+![Histogram showing ortholog counts](../assets/images/hydmaj.hydcur.depth.png)
 
 <br/>
 
