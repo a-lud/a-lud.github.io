@@ -240,8 +240,6 @@ clustered to find synteny blocks. Once this process finishes, the whole-genome-a
 A number of output files will be produced at this stage, but the key ones are those that end in
 `.anchors`.
 
-
-
 ## Pairwise synteny: Dotplots
 
 Now that we've generated our synteny blocks, we might want to generate some utility plots
@@ -285,8 +283,46 @@ a quater of each snakes genes missing from the other.
 
 ## Macrosynteny: Ribbon plots
 
+To generate the ribbon plots, we'll need to create a couple of extra files. The first is a simple `seqids` file.
+This is literally a two-line file with the chromosome name of *H. major* and *H. curtus* on each line. Normally,
+if you had many chromosomes, you'd order them here in this file. An example is below.
 
+```text
+chr1
+CM033602.1
+```
 
+Next, we need to create a layout file, which tells the program where to draw what. If you want to know what
+all the fields mean, check out the [documentation][mcscan]. The layout file should look like the following.
+
+```text
+# y, xstart, xend, rotation, color, label, va,  bed
+ .6,     .1,    .8,       0,      , H. major, top, hydmaj.bed
+ .4,     .1,    .8,       0,      , H. curtus, top, hydcur.bed
+# edges
+e, 0, 1, hydmaj.hydcur.anchors.simple
+```
+
+You'll notice that there is the file `hydmaj.hydcur.anchors.simple` which doesn't exist yet. To create this
+we need to run the following command.
+
+```bash
+python3 -m jcvi.compara.synteny screen --minspan=30 --simple hydmaj.hydcur.anchors hydmaj.hydcur.anchors.new 
+```
+
+This creates a subset of the `hydmaj.hydcur.anchors` file, a more sussinct form of the anchors file for plotting.
+
+With all that done, we can now produce the ribbon plot by running this command.
+
+```bash
+python3 -m jcvi.graphics.karyotype --basepair --format=png seqids layout
+```
+
+Which will produce an output `karyotype.png`
+
+![](../assets/images/karyotype.png)
+
+<br/>
 
 [mcscan]: https://github.com/tanghaibao/jcvi/wiki/MCscan-(Python-version)
 [liftoff]: https://github.com/agshumate/Liftoff
