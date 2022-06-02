@@ -26,7 +26,7 @@ becoming available, making whole genome comparisons a logical starting point in 
 Here, I'll outline how to compare chromosome scale sequences between two organisms, generating a range
 of informative plots along the way.
 
-## Background and software
+# Background and software
 
 [`MCScan`][mcscan] is a tool written in python for enabling the comparison of whole genome sequences with
 relative ease. Typically, aligning whole chromosomes is a computationally intensive task. `MCscan` gets
@@ -38,6 +38,8 @@ Seq1    <-----------------------------------------------------------------------
 
 Seq2    <--------------------------------------------------------------------------->
 ```
+
+<br/>
 
 `MCScan` uses genes as anchors to help alignment. Knowing that certain genes are shared between the
 two sequences helps locate alignment seeds (i.e. shared regions that can be aligned). Further, as the
@@ -53,13 +55,42 @@ genes2          ... ...     ...             ... ... ...         ... ... ... ... 
 seq2    |------------------------|         |-----------|       |-----------------------------|
 ```
 
-In the following sections, I'll demonstrate how to generate a rough gene annotation (if one doesn't exist)
-using [`Liftoff`][liftoff], before moving into the use of `MCScan` to generate a range of useful comparative
-figures.
+# This Tutorial
+
+In this tutorial, I'll walk through how to use [`Liftoff`][liftoff] to lift an annotation from
+one organism to another, before using that annotation to show syntenic regions between two chromosomal
+sequences with `MCScan`. 
+
+I've generated a couple of test datasets to work with which are chromosome 1 from *Hydrophis major* and
+*Hydrophis cyanocinctus*. These files are located on Box at `/path/goes/here`. They'll be used throughout
+this whole tutorial. In addition to the raw files, I've also included example scripts for every stage of
+this tutorial, along with the outputs. I recommend making a directory of your own following the same
+structure and running the analyses yourself, using the scripts as a guide.
+
+```bash
+synteny-tutorial/
+|-- liftoff-results
+|   |-- hydcur.log
+|   └── hydmaj.log
+|-- mcscan
+|-- reference-genome
+|   |-- tiger-reference.fa
+|   |-- tiger-reference.fa.fai
+|   |-- tiger-reference.gff3
+|   └── tiger-reference.gff3_db
+|-- scripts
+|   |-- 01-liftoff.sh
+|   └── intermediate_files
+└── seqs
+    |-- hydcur.fa
+    |-- hydcur.fa.fai
+    |-- hydmaj.fa
+    |-- hydmaj.fa.fai
+    └── hydmaj.fa.mmi
+```
+
 
 # Step 1: Gene annotation
-
-**NOTE**: You can ignore this step if a gene annotation file (GFF3) already exists for your organism of interest.
 
 As stated above, `MCScan` uses gene annotations to find homologous regions between sequences to aid alignment.
 If you have a genome assembly without an annotation file, it's possible to make one that'll do the job for
@@ -71,67 +102,190 @@ close organism onto your genome of interest. However, there are a few caveats to
 - Ensure your genome is of sufficient completeness. Fragmented genomes will have fewer genes lift over due to missing genetic content.
 - The output annotation will only have genes found in the reference file! Novel genes will not be annotated.
 
+It's important to note that the reference you use to annotate your own genome doesn't have to be the one you
+are comparing to. Any evolutionarily close genome with an annotation will do.
+
 ## Install the software
 
-`Liftoff` is available through `conda` and can be installed as follows.
+All the tools we'll need are available through `conda` and can be installed into a virtual environment
+as follows.
 
 ```bash
-conda create -n liftoff -c bioconda liftoff gffread
+conda create -n synteny -c bioconda liftoff gffread last jcvi more-itertools
 ```
 
-The command above will create a conda environment `liftoff` and install the software `liftoff` and 
-`gffread` within it.
+<br/>
 
-## Prep your input files
+The command above will create a conda environment `synteny` and install the software `liftoff`,
+`gffread`, `last` and `jcvi` (contains `MCScan`) within it.
+
+The `conda` environment can be activated using the command
+
+```bash
+conda activate synteny
+```
+
+<br/>
+
+All commands from here should be run from within this environment (i.e. after runing the activate
+command above).
+
+## The input files
 
 `Liftoff` requires three files as input:
 
-1. your.genome.fasta        = the genome you want to annotate
-2. reference.genome.fasta   = the genome that you want to lift annotations from
-3. reference.genome.gff3    = the gene annotations for the reference genome
+1. **`your.genome.fasta`**: the genome you want to annotate
+2. **`reference.genome.fasta`**: the genome that you want to lift annotations from
+3. **`reference.genome.gff3`**: the gene annotations for the reference genome
+
+In our test dataset, `hydcur.fa` and `hydmaj.fa` take the place of`your.genome.fasta`.
+The reference genomne we're going to lift annotations from is the tiger snake (`tiger-reference`),
+which takes the role of the `reference.genome` files.
 
 ## Liftoff script
 
-With these files ready to go, you'll want to create a script like the following
+With these files ready to go, you'll want to create a script like the following (i'll use `hydmaj.fa`
+as an example).
 
 ```bash
 #!/usr/bin/env bash
 
 liftoff \
-    your.genome.fasta \
-    reference.genome.fasta \
-    -g reference.genome.gff3 \
-    -o /out/path/your.genome.gff3 \
+    hydmaj.fa \
+    tiger-reference.fa \
+    -g tiger-reference.gff3 \
+    -o hydmaj.gff3 \
     -exclude_partial \
-    -p <threads> &> "liftoff.log" || exit 1
+    -p threads &> "hydmaj-liftoff.log" || exit 1
 ```
 
-In the script above, we pass the un-annotated genome (`your.genome.fasta`) as the first positional argument.
-The second positional argument is the annotated reference (`reference.genome.fasta`) that we're going to
-lift annotations from. The third argument (`-g`) is the actual gene annotations for `reference.genome.fasta`
+<br/>
+
+In the script above, we pass the un-annotated genome (`hydmaj.fa`) as the first positional argument.
+The second positional argument is the annotated reference (`tiger-reference.fa`) that we're going to
+lift annotations from. The third argument (`-g`) is the actual gene annotations for `tiger-reference.fa`
 in `GFF3` format, which is described [here][gff3]. We then specify an output file (`-o`) and specify not to
 include partial gene models (`-exclude_partial`). This is because we only want complete genes. Finally we
 ask for `-p` threads to speed the process up.
+
+In the example above, I've used `hydmaj.fa`. We'd also need to run this same code for `hydcur.fa` to lift
+annotations over to it. In the tutorial's script directory, you'll find `01-liftoff.sh`. This should
+provide an example of how to loop over the two files and generate annotations for each.
 
 If all goes to plan, you should end up with a `GFF3` file containing the genes found in your genome of interest.
 
 ## Extract CDS sequences
 
-Following annotation, we then extract the coding sequence (CDS) using [`gffread`][gffread].
+Following annotation, we then extract the coding sequence (CDS) using [`gffread`][gffread]. We can obtain
+the CDS sequences as fasta files using the following command.
 
 
 ```bash
-gffread your.genome.gff3 \
-    -g your.genome.fasta \
-    -x your.genome.fna
+gffread hydmaj.gff3 \
+    -g hydmaj.fa \
+    -x hydmaj.cds
 ```
 
-In the call above, the output file passed to `-y`  will house the coding sequences for the genes that could
-be lifted over to our genome of interest.
+<br/>
+
+In the call above, the output file (`-y`)  will house the coding sequence for the genes that could
+be lifted over to our genome of interest. An example of this is provided at the bottom of the script
+`01-liftoff.sh`.
 
 # Step 2: MCScan
+
+The steps above were just to generate annotations for our sequences of interest. The next step
+is to actually align and compare the `hydmaj` and `hydcur` chromosome-1 sequences. The files we've
+created above (`GFF3` and `CDS`) will be utilised by `MCScan` to conduct this analysis.
+
+## Prepare your files
+
+Before we can run `MCScan`, we need to prepare our files a little bit. All the steps from here
+on have been taken from the `MCScan` tutorial.
+
+First, we need to convert our `GFF3` files to `BED` format. `MCScan` comes with an accessory
+function to do this.
+
+```bash
+python3 -m jcvi.formats.gff bed --type=mRNA --key=Name hydmaj.gff3 -o hydmaj.bed
+```
+
+In the example above, we call the python module `jcvi.formats.gff` and specify that we want to
+convert our `GFF3` files into `BED` format (`bed`). We specify the type of feature we want to get
+the coordinates for (`--type=mRNA`) and which attribute to extract (`--key=Name`). **NOTE**: if
+`Name` doesn't work in the key field, try `--key=ID`. We then provide the `GFF3` file, along with
+an output file (`-o`). An example of how to do this for both files is provided in the script
+`02-mcscan.sh`.
+
+## Ortholog search
+
+Now that we have clean files, we can move on to finding orthologous sequences between the two
+snakes. To do this, we'll use the following command.
+
+```bash
+python3 -m jcvi.compara.catalog ortholog hydmaj hydcur --no_strip_names
+```
+
+<br/>
+
+The command above searches the current directory for `.bed` and `.cds` files matching
+`your.genome` and `reference.compare` - e.g. `hydmaj.bed`, `hydcur.cds`. The argument
+`--no_strip_names` is important as it will prevent the stripping of alternative-splice-isoform
+identifiers from the sequence headers.
+
+The module `jcvi.compara.catalog ortholog` proceeds to run a [`LAST`][last] alignment between the
+CDS sequences to find anchors along the genome. Alignments that pass the internal filtering are then
+clustered to find synteny blocks. Once this process finishes, the whole-genome-alignment is done.
+
+A number of output files will be produced at this stage, but the key ones are those that end in
+`.anchors`.
+
+
+
+## Pairwise synteny: Dotplots
+
+Now that we've generated our synteny blocks, we might want to generate some utility plots
+to help visualise how well the genomes aligned. Dotplots are a really simple visualisation
+method that can provide a quick summary of how well sequences aligned.
+
+The previous command will automatically produce the dotplot file `hydmaj.hydcur.pdf`. Another
+way to generate dotplot files is through the command below.
+
+```bash
+python3 -m jcvi.graphics.dotplot --skipempty --format=png -o dotplot.pdf hydmaj.hydcur.anchors
+```
+
+The dotplot shows fine grain synteny and should look similar to the following.
+
+![Dotplot between H. major and H.curtus chromosome 1](../assets/images/hydmaj.hydcur.png)
+
+## Types of orthologs
+
+In addition to visualising the dotplots, it may also be interesting to know what kinds of orthologs
+our figures are being made from. We can check this using the following command.
+
+```bash
+python3 -m jcvi.compara.synteny depth --histogram hydmaj.hydcur.anchors
+```
+
+This command will produce a histogram file showing the multiplicity of genes between the two sequences.
+Ideally, all genes would be in the `1` column, however it's not to be unexpected that some genes are
+missing or have undergone duplications.
+
+![](../assets/images/hydmaj.hydcur.depth.png)
+
+<br\>
+
+In this example, 74% of the genes in each chromosome appear only one time in the other organism, with around
+a quater of each snakes genes missing from the other.
+
+## Macrosynteny: Ribbon plots
+
+
+
 
 [mcscan]: https://github.com/tanghaibao/jcvi/wiki/MCscan-(Python-version)
 [liftoff]: https://github.com/agshumate/Liftoff
 [gff3]: https://learn.gencore.bio.nyu.edu/ngs-file-formats/gff3-format/
 [gffread]: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
+[last]: https://gitlab.com/mcfrith/last
