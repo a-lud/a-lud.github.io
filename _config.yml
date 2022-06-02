@@ -31,11 +31,9 @@ author-name: Alastair
 author-image: "/assets/images/important.png"
 # 60 Words at most in this section
 author-about: >-
-  Currently I am a PhD candidate at the University of Adelaide, with a focus on genomics and
+  I am a PhD candidate at the University of Adelaide, with a focus on genomics and
   Bioinformatics. My my areas of work include genome assembly and annotation, comparative genomics,
-  population genetics and evolutionary biology. I'm a strong proponent of reproducible research and
-  attempt to pipeline and make public my own workflows code wherever possible. On the side I work
-  at the South Australian Health and Medical Research Institute doing medical genetics research.
+  population genetics and evolutionary biology.
 
 # URL to the Author's Profile (i.e., Github, Twitter, Stackoverflow, etc)
 author-url: https://github.com/a-lud
