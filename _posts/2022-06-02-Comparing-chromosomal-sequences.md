@@ -252,8 +252,10 @@ The previous command will automatically produce the dotplot file `hydmaj.hydcur.
 way to generate dotplot files is through the command below.
 
 ```bash
-python3 -m jcvi.graphics.dotplot --skipempty --format=png -o dotplot.pdf hydmaj.hydcur.anchors
+python3 -m jcvi.graphics.dotplot --skipempty --format=png -o dotplot.png hydmaj.hydcur.anchors
 ```
+
+<br/>
 
 The dotplot shows fine grain synteny and should look similar to the following.
 
@@ -268,13 +270,15 @@ our figures are being made from. We can check this using the following command.
 python3 -m jcvi.compara.synteny depth --histogram hydmaj.hydcur.anchors
 ```
 
+<br/>
+
 This command will produce a histogram file showing the multiplicity of genes between the two sequences.
 Ideally, all genes would be in the `1` column, however it's not to be unexpected that some genes are
 missing or have undergone duplications.
 
 ![](../assets/images/hydmaj.hydcur.depth.png)
 
-<br\>
+<br/>
 
 In this example, 74% of the genes in each chromosome appear only one time in the other organism, with around
 a quater of each snakes genes missing from the other.
