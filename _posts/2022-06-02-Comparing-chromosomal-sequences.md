@@ -375,8 +375,16 @@ The final output will be `karyotype.png` showing the synteny between the two chr
 
 ![](../assets/images/karyotype.png)
 
+# What next?
+
+I've only scratched the surface of what you can do with these kinds of figures. I highly recommend checking
+out the [`MCScan`][mcscan] documentation to see how you can take the figures further. For more granular
+synteny comparisons, I recommend checking out [`Syri`][syri], another structural rearrangement tool. I've
+not used it before, but I'll try and write a tutorial for it once I've had a go.
+
 [mcscan]: https://github.com/tanghaibao/jcvi/wiki/MCscan-(Python-version)
 [liftoff]: https://github.com/agshumate/Liftoff
 [gff3]: https://learn.gencore.bio.nyu.edu/ngs-file-formats/gff3-format/
 [gffread]: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
 [last]: https://gitlab.com/mcfrith/last
+[syri]: https://github.com/schneebergerlab/syri
