@@ -1,17 +1,17 @@
 ---
-title: Comparing chromosomal sequences
+title: Comparing chromosomal sequences part 1
 layout: post
 post-image: "https://camo.githubusercontent.com/833e373b369f1c221132d729e1cf0128a8cd638fc04c90782ad7d5e9d30867db/68747470733a2f2f7777772e64726f70626f782e636f6d2f732f39766c337973336e6476696d6734632f67726170652d70656163682d636163616f2e706e673f7261773d31"
 description: A guide to generate synteny plots using MCscan
 tags:
-  - Comparative
+  - Comparative genomics
   - Synteny
   - Guide
 ---
 
 Comparing genetic sequences is a common task in genomics. There are a range of methods to evaluate
 the similarities and differences within and between organisms. Here, I'll demonstrate how to generate
-a ribbon plot between two chromosomes.
+a ribbon plot between two chromosomes. Thumbnail from: https://github.com/tanghaibao/jcvi/wiki/MCscan-(Python-version)
 
 ---
 
