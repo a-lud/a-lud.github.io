@@ -4,8 +4,8 @@
 @import "main.scss";
 
 #navbar {
-  opacity: 0.95;
-  background: rgba(0, 0, 0, 0);
+  opacity: 0.75;
+  background: rgba(0, 0, 0, 0.998);
 }
 
 .is-active {
@@ -81,7 +81,7 @@ a.navbar-item.is-active {
     margin: auto;
 
     img {
-      border: 0.25rem dotted black;
+      border: 0.25rem solid black;
     }
   }
 
