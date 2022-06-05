@@ -271,7 +271,7 @@ I highly recommend you go and check these out, as they go into much more detail 
 
 - `Minimap2` - [Documentation][minimap2]
 - `Syri` - [Documentation][syridoc]
-- `Plotsr - [Documentation][plotsr]
+- `Plotsr` - [Documentation][plotsr]
 
 As I mentioned above, all the resources for this tutorial are in the Box directory [`syri-resources`][box],
 which has an example script, along with all the input, output and intermetiate files.
