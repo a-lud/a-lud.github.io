@@ -257,7 +257,7 @@ plotsr \
 
 The output of which looks like this
 
-![](../assets/images/tracks.png)
+![Track synteny plot generated from Syri and plotsr.](../assets/images/tracks.png)
 
 
 # What next?
