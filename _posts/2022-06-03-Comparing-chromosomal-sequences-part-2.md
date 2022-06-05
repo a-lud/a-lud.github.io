@@ -250,6 +250,7 @@ plotsr \
      -o tracks.png \
      --genomes genomes.txt \
      --markers markers.bed \
+     --tracks tracks.txt \
      -s 5000 \
      -W 6 \
      -H 4
