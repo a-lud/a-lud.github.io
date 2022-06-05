@@ -393,4 +393,4 @@ not used it before, but I'll try and write a tutorial for it once I've had a go.
 [gffread]: http://ccb.jhu.edu/software/stringtie/gff.shtml#gffread
 [last]: https://gitlab.com/mcfrith/last
 [syri]: https://github.com/schneebergerlab/syri
-[box]: https://universityofadelaide.box.com/s/7o5lo4oyroatzo504oqexgi6kqfpoly3
+[box]: https://universityofadelaide.app.box.com/folder/164542397914
