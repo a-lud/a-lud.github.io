@@ -165,7 +165,7 @@ it up a bit. Before we do anything though, we need to create a `genomes.txt` fil
 
 ## Genomes file
 
-The [`genome.txt`][genomes] file provides a bit of meta=data about the genomes we've compared. It is a tab-separated, three-columned
+The [`genome.txt`][genomes] file provides a bit of -data about the genomes we've compared. It is a tab-separated, three-columned
 file, with the three columns being 1) the path to the file, 2) the organisms name and 3) tags.. For our data, the file looks like so,
 which can be found in the `syri` output directory on Box.
 
