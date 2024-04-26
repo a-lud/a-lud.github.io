@@ -8,11 +8,14 @@ url: "https://a-lud.github.io"
 title: You Can Call Me Al
 # Description of the Site
 description: >-
-  This is a work in progress. Check back later to see how it's faring...
+Bioinformatician working at Black Ochre Data Labs and the University of Adelaide
+
 # URL of Image of the Site
 site-image: /WhatATheme/assets/images/meta.jpg
+
 # Keywords of the Site
 site-keywords: Site, Template, Theme
+
 # URL for the Image of custom Favicon
 favicon-url: https://i.pinimg.com/originals/f9/ee/57/f9ee57db46f659ccb83bf2634590c967.jpg
 
@@ -22,18 +25,20 @@ heroimage: /assets/images/cropped-sassafras-painting.jpg
 # If you don't want to use any icon, you can leave them blank.
 email: alastair.ludington@adelaide.edu.au
 github_username: a-lud
-twitter_username: ajlud1
+# twitter_username: ajlud1
 # spotify_username: /
 
 # Name of the Author
 author-name: Alastair
+
 # URL for the Image of the Author
 author-image: "/assets/images/important.png"
+
 # 60 Words at most in this section
 author-about: >-
-  I am a PhD candidate at the University of Adelaide, with a focus on genomics and
-  Bioinformatics. My my areas of work include genome assembly and annotation, comparative genomics,
-  population genetics and evolutionary biology.
+  I'm currently part of the Black Ochre Data Labs, which is a multidisciplinary research team looking to reduce
+  health inequalities through the use of genomics. A day a week, I also work at the University of Adelaide where
+  I continue my own research. My research interests are comparative genomics, population genetics and evolutionary biology.
 
 # URL to the Author's Profile (i.e., Github, Twitter, Stackoverflow, etc)
 author-url: https://github.com/a-lud
